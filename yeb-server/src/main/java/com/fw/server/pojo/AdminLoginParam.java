@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 /**
  * 用户登录实体类
+ *
  * @author FW900
  * @date 2021-09-20 17:42
  */
@@ -20,4 +21,6 @@ public class AdminLoginParam {
     private String username;
     @ApiModelProperty(value = "密码", required = true)
     private String password;
+    @ApiModelProperty(value = "验证码", required = true)
+    private String code;
 }

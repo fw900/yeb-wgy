@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
+ * 当权限不足时返回信息
  * @author FW900
  * @date 2021-09-21 14:55
  */
