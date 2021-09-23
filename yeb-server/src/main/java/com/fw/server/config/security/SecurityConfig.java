@@ -1,18 +1,22 @@
 package com.fw.server.config.security;
 
+import com.fw.server.config.security.component.*;
 import com.fw.server.pojo.Admin;
 import com.fw.server.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -30,6 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private RestAuthorizationEntryPoint restAuthorizationEntryPoint;
+    @Autowired
+    private CustomFilter customFilter;
+    @Autowired
+    private CustomUrlDecisionManager customUrlDecisionManager;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,9 +61,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 允许登录
                 //.antMatchers("/login", "logout").permitAll()
                 // 除了上面所有请求都需要认证
-                .anyRequest().authenticated().and()
+                .anyRequest().authenticated()
+                // 动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(customUrlDecisionManager);
+                        object.setSecurityMetadataSource(customFilter);
+                        return object;
+                    }
+                })
                 // 禁用缓存
-                .headers().cacheControl();
+                .and().headers().cacheControl();
         // 添加jwt，登录授权过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         // 添加自定义未授权和未登录结果返回
@@ -68,10 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 重写loadUserByUsername
         return username -> {
             Admin admin = adminService.getAdminByUsername(username);
+            // 设置用户角色
+            admin.setRoles(adminService.getRoles(admin.getId()));
             if (null != admin) {
                 return admin;
             }
-            return null;
+            throw new UsernameNotFoundException("用户名或者密码错误！");
         };
     }
 

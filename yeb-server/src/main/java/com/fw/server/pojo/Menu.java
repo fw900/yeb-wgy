@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author fw
@@ -25,7 +25,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_menu")
-@ApiModel(value="Menu对象", description="")
+@ApiModel(value = "Menu对象", description = "")
 public class Menu implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,4 +65,7 @@ public class Menu implements Serializable {
     @TableField(exist = false)
     private List<Menu> children;
 
+    @ApiModelProperty(value = "角色列表")
+    @TableField(exist = false)
+    private List<Role> roles;
 }
