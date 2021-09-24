@@ -13,4 +13,10 @@ import com.fw.server.pojo.MenuRole;
  */
 public interface MenuRoleMapper extends BaseMapper<MenuRole> {
 
+    /**
+     * 更新角色菜单
+     * @param rid
+     * @param mids
+     */
+    Integer insertRecord(Integer rid, Integer[] mids);
 }
