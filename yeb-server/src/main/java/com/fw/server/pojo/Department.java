@@ -1,13 +1,13 @@
 package com.fw.server.pojo;
 
+import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -22,7 +22,9 @@ import java.util.List;
  * @since 2021-09-19
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, of = "name") // 以 name 重写 EqualsAndHashCode
+@NoArgsConstructor
+@RequiredArgsConstructor // 有参构造,会生成一个包含常量，和标识了NotNull的变量的构造方法。
 @Accessors(chain = true)
 @TableName("t_department")
 @ApiModel(value = "Department对象", description = "")
@@ -35,6 +37,8 @@ public class Department implements Serializable {
     private Integer id;
 
     @ApiModelProperty(value = "部门名称")
+    @Excel(name = "部门名称")
+    @NonNull
     private String name;
 
     @ApiModelProperty(value = "父id")

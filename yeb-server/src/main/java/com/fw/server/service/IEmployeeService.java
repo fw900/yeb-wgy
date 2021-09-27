@@ -6,6 +6,7 @@ import com.fw.server.pojo.RespBean;
 import com.fw.server.pojo.RespPageBean;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -25,7 +26,7 @@ public interface IEmployeeService extends IService<Employee> {
      * @param beginDateScope
      * @return
      */
-    RespPageBean getEmployee(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope);
+    RespPageBean getEmployeeByPage(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope);
 
     /**
      * 获取工号
@@ -47,4 +48,10 @@ public interface IEmployeeService extends IService<Employee> {
      * @return
      */
     RespPageBean getEmployeeWithSalary(Integer current, Integer size);
+
+    /**
+     * 查询员工，用于导出员工数据
+     * @param id
+     */
+    List<Employee> getEmployee(Integer id);
 }

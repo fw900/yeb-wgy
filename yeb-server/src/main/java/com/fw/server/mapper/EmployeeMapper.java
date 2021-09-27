@@ -7,6 +7,7 @@ import com.fw.server.pojo.Employee;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * <p>
@@ -32,4 +33,11 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
      * @return
      */
     IPage<Employee> getEmployeeWithSalary(Page<Employee> page);
+
+    /**
+     * 查询员工，用于导出员工数据
+     * @param id
+     * @return
+     */
+    List<Employee> getEmployee(Integer id);
 }

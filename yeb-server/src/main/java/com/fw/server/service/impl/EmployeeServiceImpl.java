@@ -41,7 +41,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
      * @return
      */
     @Override
-    public RespPageBean getEmployee(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope) {
+    public RespPageBean getEmployeeByPage(Integer currentPage, Integer size, Employee employee, LocalDate[] beginDateScope) {
         // 开启分页
         Page<Employee> page = new Page<>(currentPage, size);
         IPage<Employee> employeeByPage = employeeMapper.getEmployeeByPage(page, employee, beginDateScope);
@@ -97,5 +97,15 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
         IPage<Employee> employeeIPage = employeeMapper.getEmployeeWithSalary(page);
         RespPageBean respPageBean = new RespPageBean(employeeIPage.getTotal(), employeeIPage.getRecords());
         return respPageBean;
+    }
+
+    /**
+     * 查询员工，用于导出员工数据
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Employee> getEmployee(Integer id) {
+        return employeeMapper.getEmployee(id);
     }
 }
