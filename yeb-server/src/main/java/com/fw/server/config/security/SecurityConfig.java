@@ -47,8 +47,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
-                "/login", "/logout", "/js/**", "/css/**", "/index.html", "favicon.ico"
-                , "/doc.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**");
+                /*"/login", "/logout", "/js/**", "/css/**", "/index.html", "favicon.ico"
+                , "/doc.html", "/webjars/**", "/swagger-resources/**", "/v2/api-docs/**", "/ws/**"*/
+                "/websocket/**",
+                "/**.html",
+                "/login/**",
+                "/hello/**",
+                "/register/**",
+                "/logout/**",
+                "/css/**",
+                "/js/**",
+                "/img/**",
+                "/fonts/**",
+                "favicon.ico",
+                "/doc.html",                    // 放行 swagger 资源
+                "/webjars/**",                  // 放行 swagger 资源
+                "/swagger-resources/**",        // 放行 swagger 资源
+                "/v2/api-docs/**",              // 放行 swagger 资源
+                "/captcha",      // 验证码接口
+                "/ws/**");
     }
 
     @Override
@@ -76,7 +93,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 添加jwt，登录授权过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         // 添加自定义未授权和未登录结果返回
-        http.exceptionHandling().accessDeniedHandler(restfulAccessDeniedHandler).authenticationEntryPoint(restAuthorizationEntryPoint);
+        http.exceptionHandling()
+                .accessDeniedHandler(restfulAccessDeniedHandler)
+                .authenticationEntryPoint(restAuthorizationEntryPoint);
     }
 
     @Override
